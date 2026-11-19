@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model LlmModel {
+  id            Int      @id @default(autoincrement())
+  model         String
+  modelType     String   @default("llm")
+  provider      String
+  parametersB   Float
+  modelId       String?
+  revision      String?
+  totalParameters Float?
+  activeParameters Float?
+  architecture  String?
+  attentionProfile String?
+  numHiddenLayers Int?
+  numAttentionHeads Int?
+  numKeyValueHeads Int?
+  headDim       Int?
+  hiddenSize    Int?
+  maxContextTokens Int?
+  weightFormat  String?
+  weightBits    Float?
+  kvCacheBits   Int?
+  residentWeightBytes Float?
+  residentWeightEngine String?
+  residentWeightEngineVersion String?
+  residentWeightSource String?
+  metadataSource String?
+  verifiedAt    String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Gpu {
+  id        String   @id
+  vendor    String
+  name      String
+  className String
+  vramGb    Float
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ServerApp {
+  id        Int      @id @default(autoincrement())
+  name      String
+  category  String?
+  iconName  String?
+  iconBackground String @default("auto")
+  networkGbps Float?
+  cpuCores  Float
+  ramGb     Float
+  storageGb Float
+  note      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LlmPickModelHistory {
+  id                    Int       @id @default(autoincrement())
+  calculationVersion    Int?
+  calculationSnapshot   String?
+  name                  String
+  modelId               Int?
+  modelName             String
+  modelProvider         String
+  modelParametersB      Float
+  useCase               String
+  contextTokens         Int
+  quant                 String
+  concurrent            Int
+  hardwareType          String
+  gpuId                 String?
+  gpuName               String?
+  gpuCount              Int?
+  systemRamGb           Float?
+  weightGb              Float?
+  kvGb                  Float?
+  requiredGpuVramGb     Float?
+  availableGpuVramGb    Float?
+  requiredSystemRamGb   Float?
+  supportedConcurrent   Int?
+  status                String
+  recommendationText    String
+  createdAt             DateTime  @default(now())
+  deletedAt             DateTime?
+}
+
+model AppSizerHistory {
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  growMode             String
+  growPercent          Float
+  cpuGrowPercent       Float?
+  ramGrowPercent       Float?
+  storageGrowPercent   Float?
+  networkGrowPercent   Float?
+  appCount             Int
+  baseCpu              Float
+  baseRamGb            Float
+  baseStorageGb        Float
+  baseNetworkGbps      Float?
+  recommendedCpu       Float
+  recommendedRamGb     Float
+  recommendedStorageGb Float
+  recommendedNetworkGbps Float?
+  status               String
+  recommendationText   String
+  createdAt            DateTime               @default(now())
+  deletedAt            DateTime?
+  items                AppSizerHistoryItem[]
+}
+
+model AppSizerHistoryItem {
+  id             Int             @id @default(autoincrement())
+  historyId      Int
+  appId          Int?
+  name           String
+  category       String?
+  cpuCores       Float
+  ramGb          Float
+  storageGb      Float
+  history        AppSizerHistory @relation(fields: [historyId], references: [id], onDelete: Cascade)
+}

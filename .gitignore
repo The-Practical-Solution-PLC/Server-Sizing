@@ -1,9 +1,9 @@
 .env
 **/.env
-!Frontend/.env
+!frontend/.env
 **/.next/
 **/node_modules/
 **/*.tsbuildinfo
 **/*.bak
-Frontend/prisma/*.db
-Frontend/prisma/data/
+frontend/prisma/*.db
+frontend/prisma/data/
